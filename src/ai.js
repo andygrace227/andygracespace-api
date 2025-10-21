@@ -1,14 +1,22 @@
 import express from 'express';
-
+import bodyParser from 'body-parser';
 import HuggingFace from './clients/HuggingFace.js';
 
-const router = express.Router();
+const aiRouter = express.Router();
 
 const hfClient = new HuggingFace();
 
-router.post('/text/completionStream', async (req, res) => {
-  const request = req.body;
+const jsonParser = bodyParser.json();
+
+aiRouter.post('/text/completionStream', jsonParser, async (req, res) => {
+  if (!req.body) {
+    res.status(400).send("Your request was malformed or empty.");
+    return
+  }
+
   try {
+    console.log("Request: " + req);
+    const request = req.body;
     const stream = await hfClient.generateCompletionStream(request);
     stream.pipe(res);
   } catch (error) {
@@ -17,4 +25,4 @@ router.post('/text/completionStream', async (req, res) => {
   }
 });
 
-export default router;
+export default aiRouter;
