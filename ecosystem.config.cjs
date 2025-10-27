@@ -2,7 +2,7 @@ module.exports = {
   apps : [{
     script: './src/index.js',
     name   : "andygracespace_api",
-    watch: '.'
+    watch: ["src"]
   }],
 
   deploy : {
